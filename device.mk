@@ -15,8 +15,22 @@ AB_OTA_POSTINSTALL_CONFIG += \
 
 # Boot control HAL
 PRODUCT_PACKAGES += \
-    android.hardware.boot@1.0-impl \
+    android.hardware.boot@1.0-impl
+    android.hardware.boot@1.0-impl.recovery \
     android.hardware.boot@1.0-service
+
+# Recovery init
+PRODUCT_PACKAGES += \
+    init.recovery.sun55iw3p1.rc
+
+# fastbootd
+PRODUCT_PACKAGES += \
+    fastbootd
+
+# Rootdir
+PRODUCT_PACKAGES += \
+    servicemanager.recovery.rc \
+    snapuserd.rc
 
 PRODUCT_PACKAGES += \
     bootctrl.diana \

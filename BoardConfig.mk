@@ -71,6 +71,7 @@ BOARD_INIT_BOOT_HEADER_VERSION := 4
 BOARD_KERNEL_SEPARATED_DTBO := true
 BOARD_KERNEL_IMAGE_NAME := Image.gz
 BOARD_USES_GENERIC_KERNEL_IMAGE := true
+TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery/root/system/etc/recovery.fstab
 
 # Vendor_boot recovery ramdisk
 BOARD_USES_RECOVERY_AS_BOOT := false

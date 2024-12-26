@@ -46,7 +46,7 @@ TARGET_SCREEN_DENSITY := 240
 
 # Kernel
 BOARD_VENDOR_CMDLINE := loop.max_part=4 mmcblk.perdev_minors=16 firmware_class.path=/vendor/etc/firmware bootconfig
-BOARD_VENDOR_BASE := 0x40078000
+BOARD_KERNEL_BASE := 0x40078000
 BOARD_PAGE_SIZE := 2048
 BOARD_KERNEL_OFFSET := 0x00008000
 BOARD_RAMDISK_OFFSET := 0x03388000
@@ -83,6 +83,14 @@ TARGET_KERNEL_SOURCE := kernel/askey/adt3
 
 # Kernel - prebuilt
 BOARD_PREBUILT_DTBIMAGE_DIR := $(DEVICE_PATH)/prebuilt/dtb.img
+BOARD_MKBOOTIMG_ARGS += \
+    --header_version $(BOARD_BOOT_HEADER_VERSION) \
+    --base $(BOARD_KERNEL_BASE) \
+    --kernel_offset $(BOARD_KERNEL_OFFSET) \
+    --pagesize $(BOARD_KERNEL_PAGESIZE) \
+    --ramdisk_offset $(BOARD_RAMDISK_OFFSET) \
+    --tags_offset $(BOARD_KERNEL_TAGS_OFFSET) \
+    --dtb_offset $(BOARD_DTB_OFFSET)
 
 # Partitions
 BOARD_FLASH_BLOCK_SIZE := 131072 # (BOARD_KERNEL_PAGESIZE * 64)

@@ -88,7 +88,6 @@ BOARD_MKBOOTIMG_ARGS += \
     --base $(BOARD_KERNEL_BASE) \
     --kernel_offset $(BOARD_KERNEL_OFFSET) \
     --ramdisk_offset $(BOARD_RAMDISK_OFFSET) \
-    --tags_offset $(BOARD_KERNEL_TAGS_OFFSET) \
     --dtb_offset $(BOARD_DTB_OFFSET)
 
 # Partitions

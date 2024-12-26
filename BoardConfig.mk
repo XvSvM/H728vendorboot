@@ -82,7 +82,7 @@ TARGET_KERNEL_CONFIG := adt3_defconfig
 TARGET_KERNEL_SOURCE := kernel/askey/adt3
 
 # Kernel - prebuilt
-BOARD_PREBUILT_DTBIMAGE_DIR := $(DEVICE_PATH)/prebuilt/dtb.img
+TARGET_PREBUILT_DTB := $(DEVICE_PATH)/prebuilt/dtb.img
 BOARD_MKBOOTIMG_ARGS += \
     --header_version $(BOARD_BOOT_HEADER_VERSION) \
     --base $(BOARD_KERNEL_BASE) \

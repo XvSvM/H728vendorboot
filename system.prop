@@ -2,4 +2,11 @@
 ro.secure=0
 ro.adb.secure=0
 ro.debuggable=1
+# Dynamic Partitions
+ro.boot.dynamic_partitions=true
 
+# Fstab
+ro.postinstall.fstab.prefix=/system
+
+# USB MTP
+ro.sys.usb.storage.type=mtp

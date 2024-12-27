@@ -5,103 +5,103 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-# Soong namespaces
-LOCAL_PATH := device/askey/adt3
+DEVICE_PATH := device/askey/adt3
+
+# API
+PRODUCT_SHIPPING_API_LEVEL := 33
+PRODUCT_TARGET_VNDK_VERSION := 34
 
 # A/B
-AB_OTA_PARTITIONS += recovery
 AB_OTA_UPDATER := true
-ENABLE_VIRTUAL_AB := true
-TARGET_ENFORCE_AB_OTA_PARTITION_LIST := true
+AB_OTA_PARTITIONS += \
+    boot \
+    product \
+    system \
+    system_ext \
+    vendor 
+  
+PRODUCT_PACKAGES += \
+    update_engine \
+    update_engine_sideload \
+    update_verifier \
+    otapreopt_script \
+    checkpoint_gc
+
 AB_OTA_POSTINSTALL_CONFIG += \
     RUN_POSTINSTALL_system=true \
     POSTINSTALL_PATH_system=system/bin/otapreopt_script \
-    FILESYSTEM_TYPE_system=ext4 \
+    FILESYSTEM_TYPE_system=$(BOARD_SYSTEMIMAGE_FILE_SYSTEM_TYPE) \
     POSTINSTALL_OPTIONAL_system=true
 
 AB_OTA_POSTINSTALL_CONFIG += \
     RUN_POSTINSTALL_vendor=true \
     POSTINSTALL_PATH_vendor=bin/checkpoint_gc \
-    FILESYSTEM_TYPE_vendor=ext4 \
+    FILESYSTEM_TYPE_vendor=$(BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE) \
     POSTINSTALL_OPTIONAL_vendor=true
 
+# Additional Target Libraries
+TARGET_RECOVERY_DEVICE_MODULES += \
+    android.hardware.graphics.common@1.0 \
+    libion \
+    libxml2
+
+TW_RECOVERY_ADDITIONAL_RELINK_LIBRARY_FILES += \
+    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.graphics.common@1.0.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/libion.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/libxml2.so
+
+# Bootctrl
 PRODUCT_PACKAGES += \
-    linker.vendor_ramdisk \
-    shell_and_utilities_vendor_ramdisk \
+    android.hardware.boot@1.2-service \
+    android.hardware.boot@1.2-impl \
+    android.hardware.boot@1.2-impl.recovery
 
-PRODUCT_PACKAGES += adbd.recovery
+PRODUCT_PACKAGES_DEBUG += \
+    bootctrl
 
+# Dynamic
+PRODUCT_USE_DYNAMIC_PARTITIONS := true
+
+# DRM
 PRODUCT_PACKAGES += \
-    linker.vendor_ramdisk \
-    resize2fs.vendor_ramdisk \
-    tune2fs.vendor_ramdisk \
-
-PRODUCT_PACKAGES += adbd.vendor_ramdisk
-
-PRODUCT_PACKAGES += \
-    linker.recovery \
-    shell_and_utilities_recovery \
-    adbd.recovery
-
-# Enable updating of APEXes
-$(call inherit-product, $(SRC_TARGET_DIR)/product/updatable_apex.mk)
+    android.hardware.drm@1.4
 
 # Health
 PRODUCT_PACKAGES += \
     android.hardware.health@2.1-impl \
     android.hardware.health@2.1-service
 
-# API level
-PRODUCT_SHIPPING_API_LEVEL := 34
+# HIDL Service
+PRODUCT_ENFORCE_VINTF_MANIFEST := true
 
-# VNDK
-#PRODUCT_TARGET_VNDK_VERSION := current
-
-# Enable developer GSI keys
-#$(call inherit-product, $(SRC_TARGET_DIR)/product/gsi_keys.mk)
-
+# Recovery init
 PRODUCT_PACKAGES += \
-    android.hardware.fastboot@1.1-impl-mock \
-    fastbootd 
+    init.recovery.diana.rc
 
+# Filesystem table
 PRODUCT_PACKAGES += \
-    otapreopt_script \
-    cppreopts.sh \
-    update_engine \
-    update_verifier \
-    update_engine_sideload
+    recovery.fstab \
 
-# Health HAL
+# fastbootd
 PRODUCT_PACKAGES += \
-    android.hardware.health@2.1-service \
-    android.hardware.health@2.1-impl
-
-# Boot Control HAL
-PRODUCT_PACKAGES += \
-    android.hardware.boot@1.1-impl 
+    fastbootd
 
 # Gatekeeper
 PRODUCT_PACKAGES += \
-    android.hardware.gatekeeper@1.0-service
-
-# Partitions
-PRODUCT_USE_DYNAMIC_PARTITIONS := true
-
-PRODUCT_PACKAGES_DEBUG += \
-    update_engine_client
-
-# Recovery additional binaries
-TARGET_RECOVERY_DEVICE_MODULES += \
-    libion \
-    libxml2
-
-RECOVERY_LIBRARY_SOURCE_FILES += \
-    $(TARGET_OUT_SHARED_LIBRARIES)/libion.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/libxml2.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/libkeymaster4.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/libpuresoftkeymasterdevice.so
+	android.hardware.gatekeeper@1.0-service
 
 # Additional Libraries
 TARGET_RECOVERY_DEVICE_MODULES += \
     libkeymaster4 \
+    libkeymaster41 \
     libpuresoftkeymasterdevice
+
+RECOVERY_LIBRARY_SOURCE_FILES += \
+    $(TARGET_OUT_SHARED_LIBRARIES)/libkeymaster4.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/libkeymaster41.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/libpuresoftkeymasterdevice.so
+
+# Rootdir
+PRODUCT_PACKAGES += \
+    servicemanager.recovery.rc \
+    snapuserd.rc

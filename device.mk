@@ -5,45 +5,54 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-LOCAL_PATH := device/askey/adt3
+# Soong namespaces
+PRODUCT_SOONG_NAMESPACES += \
+    $(LOCAL_PATH)
+
+# Shipping API level
+PRODUCT_SHIPPING_API_LEVEL := 33
+
+# Dynamic Partitions
+PRODUCT_USE_DYNAMIC_PARTITIONS := true
+
+# Inherit virtual_ab_ota product
+$(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota/compression.mk)
+
+# Enforce generic ramdisk allow list
+$(call inherit-product, $(SRC_TARGET_DIR)/product/generic_ramdisk.mk)
+
+# Enable project quotas and casefolding for emulated storage without sdcardfs
+$(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
+
 # A/B
+PRODUCT_PACKAGES += \
+    update_engine \
+    update_engine_sideload \
+    update_verifier \
+    otapreopt_script \
+    checkpoint_gc
+
+PRODUCT_PACKAGES_DEBUG += \
+    update_engine_client
+
 AB_OTA_POSTINSTALL_CONFIG += \
     RUN_POSTINSTALL_system=true \
     POSTINSTALL_PATH_system=system/bin/otapreopt_script \
-    FILESYSTEM_TYPE_system=ext4 \
+    FILESYSTEM_TYPE_system=$(BOARD_SYSTEMIMAGE_PARTITION_TYPE) \
     POSTINSTALL_OPTIONAL_system=true
 
-# Boot control HAL
-PRODUCT_PACKAGES += \
-    android.hardware.boot@1.0-impl
-    android.hardware.boot@1.0-impl.recovery \
-    android.hardware.boot@1.0-service
+AB_OTA_POSTINSTALL_CONFIG += \
+    RUN_POSTINSTALL_vendor=true \
+    POSTINSTALL_PATH_vendor=bin/checkpoint_gc \
+    FILESYSTEM_TYPE_vendor=$(BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE) \
+    POSTINSTALL_OPTIONAL_vendor=true
 
-# Recovery init
+# Fastboot
 PRODUCT_PACKAGES += \
-    init.recovery.sun55iw3p1.rc
-
-# fastbootd
-PRODUCT_PACKAGES += \
+    android.hardware.fastboot@1.1-impl-mock \
     fastbootd
 
-# Rootdir
+# Health
 PRODUCT_PACKAGES += \
-    servicemanager.recovery.rc \
-    snapuserd.rc
-
-PRODUCT_PACKAGES += \
-    bootctrl.diana \
-    bootctrl.diana.recovery
-
-PRODUCT_PACKAGES += \
-    libgptutils \
-    libz \
-    libcutils
-
-PRODUCT_PACKAGES += \
-    otapreopt_script \
-    cppreopts.sh \
-    update_engine \
-    update_verifier \
-    update_engine_sideload
+    android.hardware.health-service.example-defaults \
+    android.hardware.health-service.example_recovery

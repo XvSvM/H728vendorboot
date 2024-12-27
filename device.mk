@@ -8,8 +8,23 @@
 # Soong namespaces
 LOCAL_PATH := device/askey/adt3
 
-#
-#
+PRODUCT_PACKAGES += \
+    linker.vendor_ramdisk \
+    shell_and_utilities_vendor_ramdisk \
+
+PRODUCT_PACKAGES += adbd.recovery
+
+PRODUCT_PACKAGES += \
+    linker.vendor_ramdisk \
+    resize2fs.vendor_ramdisk \
+    tune2fs.vendor_ramdisk \
+
+PRODUCT_PACKAGES += adbd.vendor_ramdisk
+
+PRODUCT_PACKAGES += \
+    linker.recovery \
+    shell_and_utilities_recovery \
+    adbd.recovery
 
 # Enable updating of APEXes
 $(call inherit-product, $(SRC_TARGET_DIR)/product/updatable_apex.mk)

@@ -6,8 +6,7 @@
 #
 
 # Soong namespaces
-PRODUCT_SOONG_NAMESPACES += \
-    $(LOCAL_PATH)
+LOCAL_PATH := device/askey/adt3
 
 # Shipping API level
 PRODUCT_SHIPPING_API_LEVEL := 33
@@ -24,50 +23,39 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/generic_ramdisk.mk)
 # Enable project quotas and casefolding for emulated storage without sdcardfs
 $(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
 
+#
+# Copyright (C) 2024 The Android Open Source Project
+# Copyright (C) 2024 SebaUbuntu's TWRP device tree generator
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+LOCAL_PATH := device/askey/adt3
+
 # A/B
-PRODUCT_PACKAGES += \
-    update_engine \
-    update_engine_sideload \
-    update_verifier \
-    otapreopt_script \
-    checkpoint_gc
-
-PRODUCT_PACKAGES_DEBUG += \
-    update_engine_client
-
 AB_OTA_POSTINSTALL_CONFIG += \
     RUN_POSTINSTALL_system=true \
     POSTINSTALL_PATH_system=system/bin/otapreopt_script \
-    FILESYSTEM_TYPE_system=$(BOARD_SYSTEMIMAGE_PARTITION_TYPE) \
+    FILESYSTEM_TYPE_system=ext4 \
     POSTINSTALL_OPTIONAL_system=true
 
-AB_OTA_POSTINSTALL_CONFIG += \
-    RUN_POSTINSTALL_vendor=true \
-    POSTINSTALL_PATH_vendor=bin/checkpoint_gc \
-    FILESYSTEM_TYPE_vendor=$(BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE) \
-    POSTINSTALL_OPTIONAL_vendor=true
-
-# Fastboot
+# Boot control HAL
 PRODUCT_PACKAGES += \
-    android.hardware.fastboot@1.1-impl-mock \
-    fastbootd
+    android.hardware.boot@1.0-impl \
+    android.hardware.boot@1.0-service
 
-# Additional Libraries
-TARGET_RECOVERY_DEVICE_MODULES += \
-    libkeymaster4support \
-    libkeymaster4_1support \
-    libpuresoftkeymasterdevice \
-    libion \
-    libxml2
-
-RECOVERY_LIBRARY_SOURCE_FILES += \
-    $(TARGET_OUT_SHARED_LIBRARIES)/libkeymaster4support.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/libkeymaster4_1support.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/libpuresoftkeymasterdevice.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/libion.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/libxml2.so
-
-# Health
 PRODUCT_PACKAGES += \
-    android.hardware.health-service.example-defaults \
-    android.hardware.health-service.example_recovery
+    bootctrl.diana
+
+PRODUCT_PACKAGES += \
+    bootctrl.diana \
+    libgptutils \
+    libz \
+    libcutils
+
+PRODUCT_PACKAGES += \
+    otapreopt_script \
+    cppreopts.sh \
+    update_engine \
+    update_verifier \
+    update_engine_sideload

@@ -58,6 +58,7 @@ BOARD_RAMDISK_OFFSET := 0x03388000
 BOARD_KERNEL_TAGS_OFFSET := 0xfff88100
 BOARD_DTB_OFFSET := 0x03288000
 BOARD_RAMDISK_USE_LZ4 := true
+BOARD_KERNEL_IMAGE_NAME := Image.lz4
 
 BOARD_VENDOR_CMDLINE := loop.max_part=4 mmcblk.perdev_minors=16 firmware_class.path=/vendor/etc/firmware bootconfig
 

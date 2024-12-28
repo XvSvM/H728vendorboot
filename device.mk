@@ -15,14 +15,6 @@ PRODUCT_TARGET_VNDK_VERSION := 34
 # Dynamic
 PRODUCT_USE_DYNAMIC_PARTITIONS := true
 
-#
-# Copyright (C) 2024 The Android Open Source Project
-# Copyright (C) 2024 SebaUbuntu's TWRP device tree generator
-#
-# SPDX-License-Identifier: Apache-2.0
-#
-
-LOCAL_PATH := device/askey/adt3
 # A/B
 AB_OTA_POSTINSTALL_CONFIG += \
     RUN_POSTINSTALL_system=true \
@@ -30,21 +22,13 @@ AB_OTA_POSTINSTALL_CONFIG += \
     FILESYSTEM_TYPE_system=ext4 \
     POSTINSTALL_OPTIONAL_system=true
 
-
-# boot hal
+# Boot control HAL
 PRODUCT_PACKAGES += \
-    android.hardware.boot@1.2-service \
-    android.hardware.boot@1.2-impl \
-    android.hardware.boot@1.2-impl.recovery
+    android.hardware.boot@1.0-impl \
+    android.hardware.boot@1.0-service
 
 PRODUCT_PACKAGES += \
-   bootctrl.updateboot \
-   update_engine_sideload \
-   update_boot   \
-   update_recovery_boot   \
-   update_engine  \
-   update_verifier
-
+    bootctrl.diana
 
 PRODUCT_PACKAGES += \
     bootctrl.diana \

@@ -146,6 +146,7 @@ TW_INCLUDE_PYTHON := true
 # Modules
 TW_LOAD_VENDOR_MODULES_EXCLUDE_GKI := true
 TW_LOAD_VENDOR_MODULES := $(DEVICE_PATH)/recovery/root/vendor/lib/modules
+TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery/root/system/etc/recovery.fstab
 
 # Vendor_boot recovery ramdisk
 BOARD_USES_RECOVERY_AS_BOOT := false
